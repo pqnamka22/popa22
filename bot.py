@@ -1,10 +1,18 @@
-import telebot
-from telebot import types
 
-# === Настройки бота ===
-TOKEN = '7951815306:AAGORsCd0m14I9sbwEL2_q69AxU6g_Wm2Hk' 
-import telebot
-from telebot import types
+
+TOKEN = "7951815306:AAGORsCd0m14I9sbwEL2_q69AxU6g_Wm2Hk"
+
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(
+        message.chat.id,
+        "👋 Привет! Я yourskincare.\nЯ подберу уход под твою кожу."
+    )
+
+bot.polling(none_stop=True)
+
 
 
 
