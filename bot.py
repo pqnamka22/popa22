@@ -5,14 +5,7 @@ TOKEN = "7951815306:AAGORsCd0m14I9sbwEL2_q69AxU6g_Wm2Hk"
 
 bot = telebot.TeleBot(TOKEN)
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.send_message(
-        message.chat.id,
-        "👋 Привет! Я yourskincare.\nЯ подберу уход под твою кожу."
-    )
 
-bot.polling(none_stop=True)
 
 
 
@@ -61,81 +54,85 @@ products = [
 {"name": "Revitalizing Day Cream", "skin_type": ["нормальная","сухая"], "problems": ["тусклость","морщины"], "goal": ["увлажнение","осветление"], "type": ["крем"], "price": "1750₽", "description": "Освежает цвет лица и повышает упругость кожи."}
 ]
 
+import telebot
+from telebot import types
 
-# === Вопросы пользователя ===
-questions = [
-    {"question": "Какой у вас тип кожи?", "options": ["сухая", "жирная", "комбинированная", "чувствительная", "нормальная"], "key": "skin_type"},
-    {"question": "Какие проблемы кожи вас беспокоят? (Можно несколько через запятую)", "options": ["сухость", "шелушение", "жирность", "акне", "покраснение", "морщины", "тусклость", "раздражение", "отёки", "темные круги"], "key": "problems"},
-    {"question": "Какая цель ухода для вашей кожи?", "options": ["увлажнение", "anti-age", "осветление", "восстановление", "матирование"], "key": "goal"},
-    {"question": "Какой тип средства предпочитаете?", "options": ["крем", "гель", "сыворотка", "маска", "масло", "лосьон", "пудра"], "key": "type"},
-    {"question": "Нравится ли вам лёгкая текстура средств или густая?", "options": ["лёгкая", "густая"], "key": "texture"}  # Для примера, можно хранить как дополнительный фильтр
-]
+TOKEN = "ТВОЙ_ТОКЕН"
+bot = telebot.TeleBot(TOKEN)
 
-# === Словарь для ответов пользователей ===
+# ================== БАЗА ==================
+products = [ ... ]  # твоя база БЕЗ ИЗМЕНЕНИЙ
+
+questions = [ ... ]  # твои 5 вопросов
+
 user_data = {}
 
-# === Старт бота ===
+# ================== START ==================
 @bot.message_handler(commands=['start'])
 def start(message):
     chat_id = message.chat.id
     user_data[chat_id] = {}
-    bot.send_message(chat_id, "Привет! Я YourSkincare 🌿\nЯ помогу подобрать средства для твоей кожи.")
+    bot.send_message(
+        chat_id,
+        "👋 Привет! Я YourSkincare 🌿\nЯ помогу подобрать уход."
+    )
     ask_question(chat_id, 0)
 
-# === Задаём вопросы по очереди ===
+# ================== ВОПРОСЫ ==================
 def ask_question(chat_id, q_index):
     if q_index < len(questions):
         q = questions[q_index]
-        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-        for option in q["options"]:
-            markup.add(option)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        for opt in q["options"]:
+            markup.add(opt)
         bot.send_message(chat_id, q["question"], reply_markup=markup)
-        bot.register_next_step_handler_by_chat_id(chat_id, lambda msg: handle_answer(msg, q_index))
+        bot.register_next_step_handler_by_chat_id(
+            chat_id,
+            lambda msg: handle_answer(msg, q_index)
+        )
     else:
         send_filtered_products(chat_id)
 
 def handle_answer(message, q_index):
     chat_id = message.chat.id
-    answer = message.text.lower()
     key = questions[q_index]["key"]
+    text = message.text.lower()
 
     if key == "problems":
-        answer_list = [a.strip() for a in answer.split(",") if a.strip() in questions[q_index]["options"]]
-        user_data[chat_id][key] = answer_list
+        user_data[chat_id][key] = [
+            t.strip() for t in text.split(",")
+        ]
     else:
-        user_data[chat_id][key] = answer
+        user_data[chat_id][key] = text
 
     ask_question(chat_id, q_index + 1)
 
-# === Фильтруем продукты по 5 критериям ===
+# ================== ФИЛЬТР ==================
 def send_filtered_products(chat_id):
     filters = user_data[chat_id]
-    filtered = []
-    for p in products:
-        # skin_type
-        if filters.get("skin_type") not in p["skin_type"]:
-            continue
-        # problems (хотя бы одна совпадает)
-        if not any(prob in p["problems"] for prob in filters.get("problems", [])):
-            continue
-        # goal
-        if filters.get("goal") not in p["goal"]:
-            continue
-        # type
-        if filters.get("type") not in p["type"]:
-            continue
-        # texture - если есть, можно использовать, здесь просто для примера
-        filtered.append(p)
+    result = []
 
-    if not filtered:
-        bot.send_message(chat_id, "По вашим ответам не найдено подходящих средств 😔")
+    for p in products:
+        if filters["skin_type"] not in p["skin_type"]:
+            continue
+        if not any(pr in p["problems"] for pr in filters["problems"]):
+            continue
+        if filters["goal"] not in p["goal"]:
+            continue
+        if filters["type"] not in p["type"]:
+            continue
+        result.append(p)
+
+    if not result:
+        bot.send_message(chat_id, "❌ Подходящих средств не найдено")
         return
 
-    msg_text = "Вот подходящие средства для вашей кожи:\n\n"
-    for p in filtered:
-        msg_text += f"• {p['name']} — {p['price']}\n  {p['description']}\n\n"
+    text = "✅ Подходящие средства:\n\n"
+    for p in result[:10]:
+        text += f"• {p['name']} — {p['price']}\n{p['description']}\n\n"
 
-    bot.send_message(chat_id, msg_text, reply_markup=types.ReplyKeyboardRemove())
+    bot.send_message(chat_id, text, reply_markup=types.ReplyKeyboardRemove())
 
-# === Запуск бота ===
+# ================== ЗАПУСК ==================
 bot.infinity_polling()
+
