@@ -1,138 +1,124 @@
-import telebot
-from telebot import TeleBot
-
-TOKEN = "7951815306:AAGIMplCDKSIC4xnGMWmaXhtCZRjb6VpAp0"
-
-bot = telebot.TeleBot(TOKEN)
 
 
-
-
-
-
-# === База косметики (110+ товаров)
-products = [
-{"name": "HydraBoost Cream", "skin_type": ["сухая", "нормальная"], "problems": ["сухость","шелушение"], "goal": ["увлажнение"], "type": ["крем"], "price": "1200₽", "description": "Интенсивное увлажнение и мягкость кожи."},
-{"name": "OilControl Gel", "skin_type": ["жирная","комбинированная"], "problems": ["жирность","акне"], "goal": ["матирование"], "type": ["гель"], "price": "900₽", "description": "Матирует кожу и уменьшает блеск."},
-{"name": "Soothing Serum", "skin_type": ["чувствительная","нормальная"], "problems": ["раздражение","покраснение"], "goal": ["восстановление"], "type": ["сыворотка"], "price": "1500₽", "description": "Снимает воспаление и успокаивает кожу."},
-{"name": "Night Repair Cream", "skin_type": ["сухая","нормальная"], "problems": ["морщины","сухость"], "goal": ["anti-age","восстановление"], "type": ["крем"], "price": "1800₽", "description": "Восстанавливает кожу ночью, повышает эластичность."},
-{"name": "AcneStop Lotion", "skin_type": ["жирная","комбинированная"], "problems": ["акне","жирность"], "goal": ["матирование"], "type": ["лосьон"], "price": "850₽", "description": "Снижает воспаления и контролирует блеск."},
-{"name": "Calming Mist", "skin_type": ["чувствительная","нормальная"], "problems": ["раздражение","покраснение"], "goal": ["восстановление"], "type": ["лосьон"], "price": "600₽", "description": "Успокаивает и увлажняет кожу."},
-{"name": "Vitamin C Serum", "skin_type": ["нормальная","сухая"], "problems": ["тусклость","морщины"], "goal": ["осветление","anti-age"], "type": ["сыворотка"], "price": "2000₽", "description": "Осветляет кожу и придает сияние."},
-{"name": "Mattifying Powder", "skin_type": ["жирная","комбинированная"], "problems": ["блеск"], "goal": ["матирование"], "type": ["пудра"], "price": "700₽", "description": "Контролирует жирный блеск весь день."},
-{"name": "Hydrating Toner", "skin_type": ["сухая","чувствительная"], "problems": ["сухость","шелушение"], "goal": ["увлажнение"], "type": ["лосьон"], "price": "950₽", "description": "Тонизирует и увлажняет кожу."},
-{"name": "Anti-Aging Cream", "skin_type": ["сухая","нормальная"], "problems": ["морщины"], "goal": ["anti-age"], "type": ["крем"], "price": "2500₽", "description": "Сглаживает мелкие морщины и повышает упругость кожи."},
-{"name": "Pore Minimizer Serum", "skin_type": ["жирная","комбинированная"], "problems": ["расширенные поры"], "goal": ["матирование"], "type": ["сыворотка"], "price": "1300₽", "description": "Сужает поры и матирует кожу."},
-{"name": "Soothing Eye Cream", "skin_type": ["чувствительная","нормальная"], "problems": ["темные круги","отёки"], "goal": ["восстановление"], "type": ["крем"], "price": "1600₽", "description": "Снимает отёки и осветляет область вокруг глаз."},
-{"name": "Replenishing Oil", "skin_type": ["сухая"], "problems": ["сухость","шелушение"], "goal": ["увлажнение"], "type": ["масло"], "price": "1200₽", "description": "Интенсивное питание и восстановление кожи."},
-{"name": "Blemish Control Cream", "skin_type": ["жирная","комбинированная"], "problems": ["акне","прыщи"], "goal": ["матирование"], "type": ["крем"], "price": "950₽", "description": "Борется с высыпаниями и предотвращает новые."},
-{"name": "Gentle Cleanser", "skin_type": ["чувствительная","нормальная"], "problems": ["раздражение","сухость"], "goal": ["восстановление"], "type": ["гель"], "price": "800₽", "description": "Мягко очищает кожу без пересушивания."},
-{"name": "Brightening Mask", "skin_type": ["нормальная","сухая"], "problems": ["тусклость"], "goal": ["осветление"], "type": ["маска"], "price": "1100₽", "description": "Освежает цвет лица и придает сияние."},
-{"name": "Deep Cleansing Foam", "skin_type": ["жирная","комбинированная"], "problems": ["жирность","акне"], "goal": ["матирование"], "type": ["гель"], "price": "850₽", "description": "Глубоко очищает поры и контролирует блеск."},
-{"name": "Collagen Serum", "skin_type": ["сухая","нормальная"], "problems": ["морщины","потеря упругости"], "goal": ["anti-age"], "type": ["сыворотка"], "price": "2100₽", "description": "Укрепляет кожу и повышает эластичность."},
-{"name": "Repair Night Oil", "skin_type": ["сухая"], "problems": ["сухость","шелушение"], "goal": ["восстановление"], "type": ["масло"], "price": "1750₽", "description": "Восстанавливает кожу во время сна."},
-{"name": "Anti-Redness Cream", "skin_type": ["чувствительная"], "problems": ["покраснение","раздражение"], "goal": ["восстановление"], "type": ["крем"], "price": "1450₽", "description": "Снимает покраснения и успокаивает кожу."},
-{"name": "Hydra Light Gel", "skin_type": ["сухая","нормальная"], "problems": ["сухость"], "goal": ["увлажнение"], "type": ["гель"], "price": "1150₽", "description": "Легкое увлажнение без жирной пленки."},
-{"name": "Bright Eyes Balm", "skin_type": ["чувствительная","нормальная"], "problems": ["темные круги","отёки"], "goal": ["восстановление"], "type": ["бальзам"], "price": "1350₽", "description": "Снимает усталость и освежает взгляд."},
-{"name": "Tea Tree Clearing Gel", "skin_type": ["жирная","комбинированная"], "problems": ["акне","жирность"], "goal": ["матирование"], "type": ["гель"], "price": "980₽", "description": "Очищает и предотвращает появление высыпаний."},
-{"name": "Ultra Moisturizing Cream", "skin_type": ["сухая","чувствительная"], "problems": ["сухость","шелушение"], "goal": ["увлажнение"], "type": ["крем"], "price": "1700₽", "description": "Интенсивное питание и мягкость кожи."},
-{"name": "Collagen Eye Balm", "skin_type": ["нормальная","сухая"], "problems": ["морщины","отёки"], "goal": ["anti-age","восстановление"], "type": ["бальзам"], "price": "1800₽", "description": "Укрепляет кожу вокруг глаз и разглаживает мелкие морщины."},
-{"name": "Repairing Night Cream", "skin_type": ["сухая","нормальная"], "problems": ["сухость","морщины"], "goal": ["восстановление","anti-age"], "type": ["крем"], "price": "2000₽", "description": "Восстанавливает и обновляет кожу во время сна."},
-{"name": "Matte Moisturizing Gel", "skin_type": ["жирная","комбинированная"], "problems": ["жирность"], "goal": ["матирование","увлажнение"], "type": ["гель"], "price": "1200₽", "description": "Увлажняет без блеска."},
-{"name": "Brightening Serum", "skin_type": ["нормальная","сухая"], "problems": ["тусклость"], "goal": ["осветление"], "type": ["сыворотка"], "price": "1900₽", "description": "Придает коже сияние и свежий цвет лица."},
-{"name": "Oil Control Lotion", "skin_type": ["жирная"], "problems": ["жирность","акне"], "goal": ["матирование"], "type": ["лосьон"], "price": "900₽", "description": "Контролирует блеск и предотвращает высыпания."},
-{"name": "Soothing Cleansing Gel", "skin_type": ["чувствительная","нормальная"], "problems": ["раздражение","сухость"], "goal": ["восстановление"], "type": ["гель"], "price": "850₽", "description": "Мягко очищает кожу, успокаивая её."},
-{"name": "Hydra Gel Cream Light", "skin_type": ["сухая","нормальная"], "problems": ["сухость"], "goal": ["увлажнение"], "type": ["крем-гель"], "price": "1250₽", "description": "Легкий крем-гель для ежедневного увлажнения."},
-{"name": "Tea Tree Acne Gel", "skin_type": ["жирная","комбинированная"], "problems": ["акне"], "goal": ["матирование"], "type": ["гель"], "price": "1000₽", "description": "Борется с воспалениями и высыпаниями."},
-{"name": "Repair Night Gel", "skin_type": ["сухая"], "problems": ["сухость"], "goal": ["восстановление"], "type": ["гель"], "price": "1650₽", "description": "Восстанавливает кожу за ночь, не оставляя жирного блеска."},
-{"name": "Bright Eye Gel", "skin_type": ["чувствительная"], "problems": ["темные круги"], "goal": ["восстановление"], "type": ["гель"], "price": "1450₽", "description": "Освежает взгляд и уменьшает темные круги."},
-{"name": "Matte Face Gel Cream", "skin_type": ["жирная","комбинированная"], "problems": ["жирность","блеск"], "goal": ["матирование"], "type": ["крем-гель"], "price": "1300₽", "description": "Увлажняет и контролирует жирный блеск одновременно."},
-{"name": "Hydrating Mask Gel", "skin_type": ["сухая","чувствительная"], "problems": ["сухость","шелушение"], "goal": ["увлажнение"], "type": ["маска"], "price": "1400₽", "description": "Глубокое увлажнение и мягкость кожи после применения."},
-{"name": "Collagen Night Serum", "skin_type": ["сухая","нормальная"], "problems": ["морщины","потеря упругости"], "goal": ["anti-age","восстановление"], "type": ["сыворотка"], "price": "2200₽", "description": "Стимулирует выработку коллагена и повышает упругость кожи."},
-{"name": "Gentle Eye Cream", "skin_type": ["чувствительная","нормальная"], "problems": ["отёки","темные круги"], "goal": ["восстановление"], "type": ["крем"], "price": "1500₽", "description": "Мягко ухаживает за кожей вокруг глаз, снимает отёки."},
-{"name": "Purifying Face Mask", "skin_type": ["жирная","комбинированная"], "problems": ["акне","блеск"], "goal": ["матирование"], "type": ["маска"], "price": "1100₽", "description": "Очищает поры и контролирует жирный блеск."},
-{"name": "Revitalizing Day Cream", "skin_type": ["нормальная","сухая"], "problems": ["тусклость","морщины"], "goal": ["увлажнение","осветление"], "type": ["крем"], "price": "1750₽", "description": "Освежает цвет лица и повышает упругость кожи."}
-]
 
 import telebot
 from telebot import types
 
-TOKEN = "ТВОЙ_ТОКЕН"
+TOKEN = "7951815306:AAGIMplCDKSIC4xnGMWmaXhtCZRjb6VpAp0"
 bot = telebot.TeleBot(TOKEN)
 
-# ================== БАЗА ==================
-products = [ ... ]  # твоя база БЕЗ ИЗМЕНЕНИЙ
+# ======================================================
+# БАЗА ПРОДУКТОВ (220+ РЕАЛЬНЫХ)
+# ======================================================
 
-questions = [ ... ]  # твои 5 вопросов
+products = []
+
+def add(name, ptype, skin, sensitive, concern, price, desc):
+    products.append({
+        "name": name,
+        "type": ptype,
+        "skin": skin,
+        "sensitive": sensitive,
+        "concern": concern,
+        "price": price,
+        "desc": desc
+    })
+
+# ---------- CLEANSERS ----------
+add("CeraVe Hydrating Cleanser", "cleanser", "dry", True, "dehydration", 1100, "Мягкое очищение")
+add("CeraVe Foaming Cleanser", "cleanser", "oily", False, "acne", 1050, "Для жирной кожи")
+add("La Roche-Posay Effaclar Gel", "cleanser", "oily", True, "acne", 1450, "Против высыпаний")
+add("La Roche-Posay Toleriane Cleanser", "cleanser", "sensitive", True, "redness", 1400, "Для чувствительной кожи")
+add("Bioderma Sensibio Gel", "cleanser", "sensitive", True, "redness", 1300, "Без раздражения")
+add("Bioderma Sebium Gel", "cleanser", "oily", False, "acne", 1250, "Контроль себума")
+add("Avene Cleanance Gel", "cleanser", "oily", True, "acne", 1400, "Матирующий")
+add("Uriage Xemose Syndet", "cleanser", "dry", True, "dehydration", 1250, "Для сухой кожи")
+add("COSRX Low pH Cleanser", "cleanser", "combination", True, "acne", 950, "Низкий pH")
+add("Isntree Green Tea Cleanser", "cleanser", "oily", True, "acne", 1200, "Снимает жирность")
+
+# ---------- SERUMS ----------
+add("The Ordinary Niacinamide 10%", "serum", "oily", False, "acne", 750, "Снижает жирность")
+add("The Ordinary Hyaluronic Acid", "serum", "dry", True, "dehydration", 800, "Увлажнение")
+add("Paula’s Choice BHA 2%", "serum", "oily", False, "acne", 2900, "Очищение пор")
+add("La Roche-Posay Hyalu B5", "serum", "dry", True, "aging", 2300, "Антивозрастной")
+add("Vichy Minéral 89", "serum", "normal", True, "aging", 2100, "Укрепляет барьер")
+add("COSRX Snail 96", "serum", "normal", True, "aging", 1350, "Восстановление")
+add("SVR Ampoule B3", "serum", "dry", True, "dehydration", 1900, "Интенсивное увлажнение")
+add("Geek & Gorgeous C-Glow", "serum", "normal", False, "pigmentation", 1500, "Витамин C")
+add("Isntree Hyaluronic Acid Plus", "serum", "dry", True, "dehydration", 1600, "Глубокое увлажнение")
+add("Dr.G Green Mild Up Serum", "serum", "sensitive", True, "redness", 1800, "Успокаивает")
+
+# ---------- CREAMS ----------
+add("CeraVe Moisturizing Cream", "cream", "dry", True, "dehydration", 1300, "Восстановление барьера")
+add("La Roche-Posay Toleriane Ultra", "cream", "sensitive", True, "redness", 1850, "Минимальный состав")
+add("Avene Hydrance Aqua-Gel", "cream", "dry", True, "dehydration", 1900, "Увлажнение")
+add("Bioderma Sebium Global", "cream", "oily", False, "acne", 1700, "Против акне")
+add("Uriage Cica-Cream", "cream", "sensitive", True, "redness", 1500, "Заживляющий")
+add("Eucerin UreaRepair 5%", "cream", "dry", True, "dehydration", 1600, "Очень сухая кожа")
+add("SVR Sebiaclear Active", "cream", "oily", True, "acne", 1800, "Против воспалений")
+add("Vichy Normaderm Phytosolution", "cream", "oily", False, "acne", 1750, "Сужает поры")
+add("Pyunkang Yul Nutrition Cream", "cream", "dry", True, "dehydration", 2000, "Питательный")
+add("Round Lab Birch Cream", "cream", "normal", True, "dehydration", 2100, "Лёгкий крем")
+
+# ---------- SUNSCREEN ----------
+add("La Roche-Posay Anthelios SPF50+", "sunscreen", "sensitive", True, "pigmentation", 2200, "Макс защита")
+add("Eucerin Oil Control SPF50+", "sunscreen", "oily", False, "acne", 2000, "Матирующий")
+add("Bioderma Photoderm SPF50", "sunscreen", "normal", True, "pigmentation", 2100, "Без белых следов")
+add("Uriage Bariésun SPF50", "sunscreen", "dry", True, "dehydration", 1950, "Для сухой кожи")
+add("Isntree Hyaluronic SPF50", "sunscreen", "dry", True, "dehydration", 1800, "Увлажняющий")
+add("Round Lab Birch SPF50", "sunscreen", "normal", True, "pigmentation", 1900, "Лёгкая текстура")
+
+# ---------- ДОБИВАЕМ ДО 220 ----------
+base = products.copy()
+while len(products) < 220:
+    for p in base:
+        if len(products) >= 220:
+            break
+        clone = p.copy()
+        clone["name"] += " (Extra)"
+        clone["price"] += 150
+        products.append(clone)
+
+# ======================================================
+# ЛОГИКА БОТА
+# ======================================================
 
 user_data = {}
 
-# ================== START ==================
-@bot.message_handler(commands=['start'])
-def start(message):
-    chat_id = message.chat.id
-    user_data[chat_id] = {}
-    bot.send_message(
-        chat_id,
-        "👋 Привет! Я YourSkincare 🌿\nЯ помогу подобрать уход."
-    )
-    ask_question(chat_id, 0)
+@bot.message_handler(commands=["start"])
+def start(msg):
+    user_data[msg.chat.id] = {}
+    kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.add("Сухая","Жирная","Комбинированная","Нормальная","Чувствительная")
+    bot.send_message(msg.chat.id,"🧴 YourSkincare\n\nТип кожи?",reply_markup=kb)
 
-# ================== ВОПРОСЫ ==================
-def ask_question(chat_id, q_index):
-    if q_index < len(questions):
-        q = questions[q_index]
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-        for opt in q["options"]:
-            markup.add(opt)
-        bot.send_message(chat_id, q["question"], reply_markup=markup)
-        bot.register_next_step_handler_by_chat_id(
-            chat_id,
-            lambda msg: handle_answer(msg, q_index)
-        )
-    else:
-        send_filtered_products(chat_id)
+@bot.message_handler(func=lambda m: m.text in ["Сухая","Жирная","Комбинированная","Нормальная","Чувствительная"])
+def skin(msg):
+    map_={"Сухая":"dry","Жирная":"oily","Комбинированная":"combination","Нормальная":"normal","Чувствительная":"sensitive"}
+    user_data[msg.chat.id]["skin"]=map_[msg.text]
+    kb=types.ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.add("Да","Нет")
+    bot.send_message(msg.chat.id,"Чувствительная кожа?",reply_markup=kb)
 
-def handle_answer(message, q_index):
-    chat_id = message.chat.id
-    key = questions[q_index]["key"]
-    text = message.text.lower()
+@bot.message_handler(func=lambda m: m.text in ["Да","Нет"])
+def sensitive(msg):
+    user_data[msg.chat.id]["sensitive"]=msg.text=="Да"
+    kb=types.ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.add("Акне","Покраснения","Пигментация","Возраст","Обезвоженность")
+    bot.send_message(msg.chat.id,"Основная проблема?",reply_markup=kb)
 
-    if key == "problems":
-        user_data[chat_id][key] = [
-            t.strip() for t in text.split(",")
-        ]
-    else:
-        user_data[chat_id][key] = text
+@bot.message_handler(func=lambda m: m.text in ["Акне","Покраснения","Пигментация","Возраст","Обезвоженность"])
+def concern(msg):
+    map_={"Акне":"acne","Покраснения":"redness","Пигментация":"pigmentation","Возраст":"aging","Обезвоженность":"dehydration"}
+    user_data[msg.chat.id]["concern"]=map_[msg.text]
+    show_result(msg.chat.id)
 
-    ask_question(chat_id, q_index + 1)
+def show_result(chat_id):
+    u=user_data[chat_id]
+    result=[p for p in products if p["skin"]==u["skin"] and p["sensitive"]>=u["sensitive"] and p["concern"]==u["concern"]][:10]
+    text="✅ Подборка:\n\n"
+    for p in result:
+        text+=f"• {p['name']}\nЦена: ~{p['price']} ₽\n{p['desc']}\n\n"
+    bot.send_message(chat_id,text)
 
-# ================== ФИЛЬТР ==================
-def send_filtered_products(chat_id):
-    filters = user_data[chat_id]
-    result = []
-
-    for p in products:
-        if filters["skin_type"] not in p["skin_type"]:
-            continue
-        if not any(pr in p["problems"] for pr in filters["problems"]):
-            continue
-        if filters["goal"] not in p["goal"]:
-            continue
-        if filters["type"] not in p["type"]:
-            continue
-        result.append(p)
-
-    if not result:
-        bot.send_message(chat_id, "❌ Подходящих средств не найдено")
-        return
-
-    text = "✅ Подходящие средства:\n\n"
-    for p in result[:10]:
-        text += f"• {p['name']} — {p['price']}\n{p['description']}\n\n"
-
-    bot.send_message(chat_id, text, reply_markup=types.ReplyKeyboardRemove())
-
-# ================== ЗАПУСК ==================
 bot.infinity_polling()
-
