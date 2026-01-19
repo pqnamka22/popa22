@@ -1,297 +1,176 @@
 import telebot
 from telebot import types
-import random
 
-TOKEN = "7951815306:AAGORsCd0m14I9sbwEL2_q69AxU6g_Wm2Hk"
-
+# === Настройки бота ===
+TOKEN = '7951815306:AAGORsCd0m14I9sbwEL2_q69AxU6g_Wm2Hk' 
 bot = telebot.TeleBot(TOKEN)
-user_data = {}
 
-# ------------------ БАЗА КОСМЕТИКИ (~150 продуктов) ------------------
-# Структура: (Название, Бренд, Описание, Бюджет, Метки)
-# Метки: acne, shine, tight, sensitive
-COSMETICS = {
-    "dry": [
-# 70 dry продуктов
-("CeraVe Moisturizing Cream", "CeraVe", "Питательный крем для сухой кожи 🌸", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("La Roche-Posay Lipikar Baume AP+", "La Roche-Posay", "Восстанавливает и успокаивает кожу 💧", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene Hydrance Riche", "Avene", "Глубокое увлажнение и комфорт ✨", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Bioderma Atoderm Cream", "Bioderma", "Защита кожного барьера 🌼", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Weleda Skin Food", "Weleda", "Плотный крем для очень сухой кожи 🌿", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Eucerin UreaRepair 5%", "Eucerin", "Смягчает и убирает стянутость", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Nivea Soft", "Nivea", "Лёгкий базовый крем", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Clinique Moisture Surge", "Clinique", "Интенсивное увлажнение 💦", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Embryolisse Lait-Creme", "Embryolisse", "Классика для сухой кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Librederm Cerafavit", "Librederm", "Восстанавливает кожу после стресса", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("La Roche-Posay Hydraphase", "La Roche-Posay", "Интенсивное увлажнение без жирности", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("CeraVe Healing Ointment", "CeraVe", "Защита и восстановление кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene XeraCalm", "Avene", "Успокаивает раздражённую кожу", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Bioderma Atoderm PP Baume", "Bioderma", "Глубокое восстановление сухой кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Weleda Almond Soothing Cream", "Weleda", "Питает и смягчает кожу", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Avene Hydrance Optimale", "Avene", "Лёгкое увлажнение на день", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Clinique Moisture Cream Rich", "Clinique", "Интенсивное питание кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Eucerin Aquaporin Active", "Eucerin", "Восстанавливает влагу кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Nivea Nourishing Care", "Nivea", "Питательный уход за кожей", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Embryolisse Moisturizer", "Embryolisse", "Крем для сухой кожи и чувствительной кожи 🌸", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("CeraVe Daily Moisturizing Lotion", "CeraVe", "Лёгкий увлажняющий крем", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("La Roche-Posay Nutritic Intense", "La Roche-Posay", "Питание для очень сухой кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene Tolerance Extreme", "Avene", "Минимум ингредиентов, максимум увлажнения", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Bioderma Atoderm Intensive Baume", "Bioderma", "Интенсивное питание кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Weleda Calendula Cream", "Weleda", "Успокаивает кожу, питает", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Eucerin Rich Care", "Eucerin", "Глубокое восстановление кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Nivea Creme", "Nivea", "Классический питательный крем", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Clinique Rich Moisture Cream", "Clinique", "Глубокое питание кожи 🌸", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Embryolisse Lait-Creme Concentre", "Embryolisse", "Универсальный крем для сухой кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene Rich Cream", "Avene", "Увлажнение и комфорт", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Bioderma Atoderm Shower Cream", "Bioderma", "Мягкое очищение для сухой кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("CeraVe Cream", "CeraVe", "Глубокое питание и восстановление", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("La Roche-Posay Lipikar Stick AP+", "La Roche-Posay", "Защита кожи для сухих участков", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Weleda Skin Food Light", "Weleda", "Лёгкое питание кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Eucerin UreaRepair Plus", "Eucerin", "Интенсивное восстановление", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Nivea Soft Cream", "Nivea", "Лёгкий крем для ежедневного ухода", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Clinique Moisture Surge Intense", "Clinique", "Увлажнение и комфорт", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Embryolisse Rich Cream", "Embryolisse", "Питание и восстановление кожи 🌸", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene Hydrance Extra Rich", "Avene", "Глубокое увлажнение", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Bioderma Atoderm Creme Nutritive", "Bioderma", "Питание и мягкость кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("CeraVe Moisturizing Cream Rich", "CeraVe", "Интенсивное питание кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("La Roche-Posay Lipikar Baume Riche", "La Roche-Posay", "Защита и восстановление кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Weleda Almond Cream", "Weleda", "Питание и смягчение кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Eucerin Advanced Repair", "Eucerin", "Глубокое восстановление кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Nivea Nourishing Cream", "Nivea", "Классическое питание сухой кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Clinique Deep Moisture Cream", "Clinique", "Интенсивное увлажнение для сухой кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Embryolisse Nutritive Cream", "Embryolisse", "Питание и комфорт кожи 🌸", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene Rich Hydration", "Avene", "Лёгкое питание и увлажнение", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Bioderma Atoderm Creme", "Bioderma", "Мягкое питание кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("CeraVe Daily Cream", "CeraVe", "Увлажнение и восстановление кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("La Roche-Posay Nutritic Cream", "La Roche-Posay", "Питательный уход за сухой кожей", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Weleda Skin Food Original", "Weleda", "Питание и защита кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Eucerin Urea Cream", "Eucerin", "Глубокое восстановление сухой кожи", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Nivea Rich Care", "Nivea", "Питание и мягкость кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Clinique Moisture Rich Cream", "Clinique", "Интенсивное увлажнение и комфорт", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Embryolisse Creme Nutritive", "Embryolisse", "Питание и восстановление кожи 🌸", "💎", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-("Avene Rich Cream Ultra", "Avene", "Увлажнение и питание кожи", "🪙", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Bioderma Atoderm Ultra Cream", "Bioderma", "Питание сухой кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": True}),
-],
-    "oily": [
-("La Roche-Posay Effaclar Duo+", "La Roche-Posay", "Против прыщей и жирного блеска ✨", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe Foaming Cleanser", "CeraVe", "Очищение без пересушивания", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("COSRX Low pH Cleanser", "COSRX", "Мягкое умывание 🌿", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("The Ordinary Niacinamide 10%", "The Ordinary", "Контроль себума и расширенных пор", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Bioderma Sebium Gel Moussant", "Bioderma", "Балансирует жирность кожи", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("SVR Sebiaclear Gel Moussant", "SVR", "Очищение и матирование кожи", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Clinique Anti-Blemish Solutions", "Clinique", "Контроль акне и жирности", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Avene Cleanance Expert", "Avene", "Сужает поры и уменьшает воспаления", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Vichy Normaderm Phytosolution", "Vichy", "Матирующий уход и контроль прыщей", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Effaclar Mat", "La Roche-Posay", "Матирует и сужает поры ✨", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe PM Facial Moisturizing Lotion", "CeraVe", "Лёгкое увлажнение без блеска", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Oil-Free Ultra Moisturizer", "COSRX", "Увлажняет без жирного блеска", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("The Ordinary Niacinamide + Zinc", "The Ordinary", "Контроль себума и воспалений", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Bioderma Sebium Global", "Bioderma", "Уход против акне и жирности", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("SVR Sebiaclear Serum", "SVR", "Матирующий и успокаивающий уход", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Clinique Acne Solutions Clearing Moisturizer", "Clinique", "Увлажнение без жирности", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Avene Cleanance Comedomed", "Avene", "Уменьшает прыщи и черные точки", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Vichy Normaderm Anti-Age", "Vichy", "Уход против акне и жирного блеска", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Effaclar Purifying Foaming Gel", "La Roche-Posay", "Очищение и баланс жирной кожи", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("CeraVe Foaming Facial Cleanser", "CeraVe", "Мягкое очищение без пересушивания", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("COSRX Centella Blemish Cream", "COSRX", "Успокаивает воспаления и акне", "💎", {"acne": True, "shine": False, "tight": False, "sensitive": True}),
-("The Ordinary Salicylic Acid 2%", "The Ordinary", "Экспресс-уход против прыщей", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Bioderma Sebium Pore Refiner", "Bioderma", "Сужает поры и контролирует блеск", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("SVR Sebiaclear Active", "SVR", "Уход для проблемной кожи", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Clinique Clarifying Lotion 2", "Clinique", "Тоник для жирной и проблемной кожи", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Avene Cleanance Hydra", "Avene", "Увлажнение без жирного блеска", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Vichy Normaderm Phytosolution Serum", "Vichy", "Сужение пор и контроль блеска", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Effaclar H", "La Roche-Posay", "Увлажнение для жирной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("CeraVe Ultra-Light Moisturizing Lotion", "CeraVe", "Лёгкое увлажнение без блеска", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("COSRX AHA/BHA Clarifying Treatment Toner", "COSRX", "Смягчает и обновляет кожу", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("The Ordinary Glycolic Acid 7% Toning Solution", "The Ordinary", "Очищение и обновление кожи", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Bioderma Sebium Mat Control", "Bioderma", "Матирование и контроль блеска", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("SVR Sebiaclear Cream", "SVR", "Успокаивающий крем для проблемной кожи", "💎", {"acne": True, "shine": False, "tight": False, "sensitive": True}),
-("Clinique Dramatically Different Oil-Free Gel", "Clinique", "Увлажнение для жирной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Avene Cleanance Mask", "Avene", "Очищение и контроль блеска", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Vichy Normaderm Night Detox", "Vichy", "Восстановление и контроль жирности", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("La Roche-Posay Effaclar K+", "La Roche-Posay", "Сужение пор и контроль акне", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe Resurfacing Retinol Serum", "CeraVe", "Контроль прыщей и обновление кожи", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Oil-Free Moisturizer", "COSRX", "Увлажнение без блеска", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("The Ordinary Retinol 0.2% in Squalane", "The Ordinary", "Против акне и обновление кожи", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Bioderma Sebium Hydra", "Bioderma", "Увлажнение и контроль блеска", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("SVR Sebiaclear Fluid", "SVR", "Лёгкий уход против акне", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Clinique Acne Solutions BB Cream", "Clinique", "Маскирует и ухаживает за кожей", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Avene Cleanance Comedomed Cream", "Avene", "Контроль черных точек и блеска", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Vichy Normaderm Hyaluspot", "Vichy", "Точечный уход против прыщей", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("La Roche-Posay Effaclar Duo+ Unifiant", "La Roche-Posay", "Коррекция цвета и контроль акне", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe AM Facial Moisturizing Lotion", "CeraVe", "Дневное увлажнение с SPF", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("COSRX BHA Blackhead Power Liquid", "COSRX", "Сужает поры и контролирует блеск", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("The Ordinary Azelaic Acid Suspension 10%", "The Ordinary", "Уменьшает акне и воспаления", "💰", {"acne": True, "shine": False, "tight": False, "sensitive": True}),
-("Bioderma Sebium Global Cover", "Bioderma", "Матирование и маскировка", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("SVR Sebiaclear Toner", "SVR", "Сужает поры и контролирует блеск", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("Clinique Acne Solutions Cleansing Foam", "Clinique", "Очищение для жирной и проблемной кожи", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("Avene Cleanance Spot", "Avene", "Точечный уход против прыщей", "🪙", {"acne": True, "shine": False, "tight": False, "sensitive": True}),
-("Vichy Normaderm Detox", "Vichy", "Детокс и контроль жирности кожи", "💎", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("La Roche-Posay Effaclar Gel", "La Roche-Posay", "Очищение и контроль блеска", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe Resurfacing Cream", "CeraVe", "Контроль прыщей и обновление кожи", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Oil-Free Toner", "COSRX", "Увлажнение без блеска", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("The Ordinary Salicylic Acid 2% Cleanser", "The Ordinary", "Очищение и контроль акне", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": True}),
-],
-    "combo": [
-("CeraVe Moisturizing Lotion", "CeraVe", "Баланс для комбинированной кожи 🌸", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Toleriane", "La Roche-Posay", "Успокаивает чувствительную кожу", "💎", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("Clinique Dramatically Different", "Clinique", "Поддержка баланса кожи", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Bioderma Sensibio Light", "Bioderma", "Для чувствительной зоны и нормальной кожи 🌸", "🪙", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("COSRX Snail Cream", "COSRX", "Восстановление и увлажнение кожи", "💰", {"acne": False, "shine": False, "tight": True, "sensitive": False}),
-("Avene Hydrance Light", "Avene", "Лёгкий крем для смешанного типа кожи", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Vichy Aqualia Thermal", "Vichy", "Увлажнение и баланс 🌿", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("SVR Hydraliane Light", "SVR", "Комфорт и баланс кожи", "💰", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("Librederm Hyaluronic", "Librederm", "Гиалуроновый уход и лёгкое увлажнение", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Nivea Aqua Effect", "Nivea", "Освежающий крем для комбинированной кожи", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Toleriane Sensitive", "La Roche-Posay", "Успокаивает и балансирует кожу", "💰", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("CeraVe PM Facial Moisturizer", "CeraVe", "Ночной баланс кожи 🌙", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("COSRX Oil-Free Moisturizer", "COSRX", "Увлажнение без блеска", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Clinique Moisture Surge 72H", "Clinique", "Длительное увлажнение и баланс", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Avene Hydrance Optimale Light", "Avene", "Лёгкий увлажняющий крем для дня", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Vichy Aqualia Thermal Light", "Vichy", "Освежение и баланс кожи 🌿", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("SVR Hydraliane Gel-Cream", "SVR", "Лёгкий гель для нормальной и комбинированной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Librederm Hyaluronic Gel", "Librederm", "Баланс увлажнения и матирования", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Nivea Balance Gel-Cream", "Nivea", "Свежесть и комфорт для смешанной кожи", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Effaclar Mat", "La Roche-Posay", "Матирование и баланс кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe Facial Moisturizing Lotion", "CeraVe", "Лёгкое увлажнение для дня", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Aloe Vera Cream", "COSRX", "Успокаивает и увлажняет кожу", "🪙", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("Clinique Moisture Surge Intense", "Clinique", "Баланс увлажнения и свежести", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Avene Tolerance Extreme Light", "Avene", "Минимум ингредиентов, максимум баланса", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Vichy Normaderm Phytosolution Light", "Vichy", "Сужение пор и матирование", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("SVR Hydraliane Light Gel", "SVR", "Лёгкий гель для комбинированной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Librederm Hyaluronic Light", "Librederm", "Увлажнение и комфорт 🌸", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Nivea Aqua Effect Gel", "Nivea", "Свежесть и баланс кожи", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Toleriane Ultra", "La Roche-Posay", "Баланс и защита чувствительной зоны", "💰", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("CeraVe Facial Lotion PM", "CeraVe", "Ночной уход с балансом увлажнения", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Centella Cream", "COSRX", "Успокаивает и восстанавливает баланс", "🪙", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("Clinique Dramatically Different Gel", "Clinique", "Баланс для смешанной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Avene Hydrance Optimale Gel", "Avene", "Лёгкий гель для свежести кожи", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Vichy Aqualia Thermal Gel", "Vichy", "Освежение и баланс 🌿", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("SVR Hydraliane Gel Light", "SVR", "Лёгкий гель для нормальной и комбинированной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Librederm Hyaluronic Gel Light", "Librederm", "Баланс и лёгкость увлажнения", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Nivea Balance Cream Gel", "Nivea", "Свежесть и матирование кожи", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Effaclar Duo+", "La Roche-Posay", "Баланс и контроль акне", "💰", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("CeraVe PM Lotion Light", "CeraVe", "Лёгкое ночное увлажнение", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Aloe Moisturizer", "COSRX", "Увлажнение и успокоение кожи", "🪙", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("Clinique Moisture Surge Light", "Clinique", "Баланс и увлажнение кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Avene Tolerance Extreme Gel", "Avene", "Лёгкий гель для чувствительной кожи", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Vichy Normaderm Light Gel", "Vichy", "Матирование и баланс кожи", "🪙", {"acne": True, "shine": True, "tight": False, "sensitive": False}),
-("SVR Hydraliane Gel Ultra", "SVR", "Увлажнение и баланс для кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Librederm Hyaluronic Cream Light", "Librederm", "Лёгкое увлажнение и свежесть", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Nivea Aqua Effect Light", "Nivea", "Свежесть и лёгкость кожи", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("La Roche-Posay Toleriane Dermo-Cleanser", "La Roche-Posay", "Очищение и баланс кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("CeraVe Moisturizing Cream Light", "CeraVe", "Лёгкое питание и увлажнение", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("COSRX Aloe Soothing Gel", "COSRX", "Освежает и успокаивает кожу", "🪙", {"acne": False, "shine": False, "tight": False, "sensitive": True}),
-("Clinique Dramatically Different Moisturizer Light", "Clinique", "Баланс и уход для смешанной кожи", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Avene Hydrance Optimale Intense", "Avene", "Интенсивное лёгкое увлажнение", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Vichy Aqualia Thermal Light Gel", "Vichy", "Свежесть и баланс кожи 🌿", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("SVR Hydraliane Ultra Light", "SVR", "Лёгкое увлажнение и баланс", "💰", {"acne": False, "shine": True, "tight": False, "sensitive": True}),
-("Librederm Hyaluronic Light Cream", "Librederm", "Увлажнение и комфорт кожи", "💎", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
-("Nivea Balance Gel", "Nivea", "Матирование и баланс кожи", "🪙", {"acne": False, "shine": True, "tight": False, "sensitive": False}),
+# === База данных косметики ===
+# Пример структуры: название, тип кожи, проблемы, цена, описание
+products = [
+
+    {"name": "HydraBoost Cream", "skin_type": ["сухая", "нормальная"], "problems": ["сухость", "шелушение"], "price": "1200₽", "description": "Интенсивное увлажнение и мягкость кожи."},
+    {"name": "OilControl Gel", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность", "акне"], "price": "900₽", "description": "Матирует кожу и уменьшает блеск."},
+    {"name": "Soothing Serum", "skin_type": ["чувствительная", "нормальная"], "problems": ["раздражение", "покраснение"], "price": "1500₽", "description": "Снимает воспаление и успокаивает кожу."},
+    {"name": "Night Repair Cream", "skin_type": ["сухая", "нормальная"], "problems": ["морщины", "сухость"], "price": "1800₽", "description": "Восстанавливает кожу ночью, повышает эластичность."},
+    {"name": "AcneStop Lotion", "skin_type": ["жирная", "комбинированная"], "problems": ["акне", "жирность"], "price": "850₽", "description": "Снижает воспаления и контролирует блеск."},
+    {"name": "Calming Mist", "skin_type": ["чувствительная", "нормальная"], "problems": ["раздражение", "покраснение"], "price": "600₽", "description": "Успокаивает и увлажняет кожу."},
+    {"name": "Vitamin C Serum", "skin_type": ["нормальная", "сухая"], "problems": ["тусклость", "морщины"], "price": "2000₽", "description": "Осветляет кожу и придает сияние."},
+    {"name": "Mattifying Powder", "skin_type": ["жирная", "комбинированная"], "problems": ["блеск"], "price": "700₽", "description": "Контролирует жирный блеск весь день."},
+    {"name": "Hydrating Toner", "skin_type": ["сухая", "чувствительная"], "problems": ["сухость", "шелушение"], "price": "950₽", "description": "Тонизирует и увлажняет кожу."},
+    {"name": "Anti-Aging Cream", "skin_type": ["сухая", "нормальная"], "problems": ["морщины"], "price": "2500₽", "description": "Сглаживает мелкие морщины и повышает упругость кожи."},
+    {"name": "Pore Minimizer Serum", "skin_type": ["жирная", "комбинированная"], "problems": ["расширенные поры"], "price": "1300₽", "description": "Сужает поры и матирует кожу."},
+    {"name": "Soothing Eye Cream", "skin_type": ["чувствительная", "нормальная"], "problems": ["темные круги", "отёки"], "price": "1600₽", "description": "Снимает отёки и осветляет область вокруг глаз."},
+    {"name": "Replenishing Oil", "skin_type": ["сухая"], "problems": ["сухость", "шелушение"], "price": "1200₽", "description": "Интенсивное питание и восстановление кожи."},
+    {"name": "Blemish Control Cream", "skin_type": ["жирная", "комбинированная"], "problems": ["акне", "прыщи"], "price": "950₽", "description": "Борется с высыпаниями и предотвращает новые."},
+    {"name": "Gentle Cleanser", "skin_type": ["чувствительная", "нормальная"], "problems": ["раздражение", "сухость"], "price": "800₽", "description": "Мягко очищает кожу без пересушивания."},
+    {"name": "Brightening Mask", "skin_type": ["нормальная", "сухая"], "problems": ["тусклость"], "price": "1100₽", "description": "Освежает цвет лица и придает сияние."},
+    {"name": "Deep Cleansing Foam", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность", "акне"], "price": "850₽", "description": "Глубоко очищает поры и контролирует блеск."},
+    {"name": "Collagen Serum", "skin_type": ["сухая", "нормальная"], "problems": ["морщины", "потеря упругости"], "price": "2100₽", "description": "Укрепляет кожу и повышает эластичность."},
+    {"name": "Repair Night Oil", "skin_type": ["сухая"], "problems": ["сухость", "шелушение"], "price": "1750₽", "description": "Восстанавливает кожу во время сна."},
+    {"name": "Anti-Redness Cream", "skin_type": ["чувствительная"], "problems": ["покраснение", "раздражение"], "price": "1450₽", "description": "Снимает покраснения и успокаивает кожу."},
+    {"name": "Acne Spot Treatment", "skin_type": ["жирная", "комбинированная"], "problems": ["акне"], "price": "700₽", "description": "Локально борется с высыпаниями."},
+    {"name": "Moisturizing Gel", "skin_type": ["нормальная", "сухая"], "problems": ["сухость"], "price": "950₽", "description": "Легкий увлажняющий гель для ежедневного ухода."},
+    {"name": "Exfoliating Scrub", "skin_type": ["нормальная", "жирная"], "problems": ["шелушение", "тусклость"], "price": "900₽", "description": "Удаляет омертвевшие клетки и выравнивает тон кожи."},
+    {"name": "Soothing Lotion", "skin_type": ["чувствительная"], "problems": ["раздражение", "покраснение"], "price": "800₽", "description": "Успокаивает кожу после внешних воздействий."},
+    {"name": "Vitamin E Cream", "skin_type": ["сухая", "нормальная"], "problems": ["сухость", "морщины"], "price": "1200₽", "description": "Питает и защищает кожу от сухости и старения."},
+    {"name": "Purifying Toner", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность", "акне"], "price": "850₽", "description": "Удаляет остатки макияжа и сужает поры."},
+    {"name": "Hydrating Sheet Mask", "skin_type": ["сухая", "нормальная"], "problems": ["сухость", "шелушение"], "price": "400₽", "description": "Интенсивное увлажнение за 15 минут."},
+    {"name": "Calming Balm", "skin_type": ["чувствительная"], "problems": ["раздражение", "покраснение"], "price": "1400₽", "description": "Мягко успокаивает раздраженную кожу."},
+    {"name": "Tea Tree Spot Gel", "skin_type": ["жирная", "комбинированная"], "problems": ["акне"], "price": "650₽", "description": "Борется с прыщами и предотвращает новые."},
+    {"name": "Ultra Moisturizing Cream", "skin_type": ["сухая"], "problems": ["сухость"], "price": "1600₽", "description": "Интенсивное увлажнение для сухой кожи."},
+    {"name": "Bright Eyes Serum", "skin_type": ["нормальная", "чувствительная"], "problems": ["темные круги", "отёки"], "price": "1550₽", "description": "Осветляет темные круги и уменьшает отёки."},
+    {"name": "Matte Face Primer", "skin_type": ["жирная", "комбинированная"], "problems": ["блеск"], "price": "1100₽", "description": "Подготовка кожи к макияжу и контроль блеска."},
+    {"name": "Soothing Face Oil", "skin_type": ["чувствительная", "сухая"], "problems": ["раздражение", "сухость"], "price": "1800₽", "description": "Успокаивает и питает кожу, придает мягкость."},
+    {"name": "Hydra Gel Cream", "skin_type": ["нормальная", "сухая"], "problems": ["сухость"], "price": "1250₽", "description": "Легкая текстура, увлажнение без липкости."},
+    {"name": "Acne Clearing Toner", "skin_type": ["жирная", "комбинированная"], "problems": ["акне", "жирность"], "price": "900₽", "description": "Матирует и борется с воспалениями."},
+    {"name": "Collagen Night Cream", "skin_type": ["сухая", "нормальная"], "problems": ["морщины", "потеря упругости"], "price": "2200₽", "description": "Восстанавливает упругость и предотвращает морщины."},
+    {"name": "Soothing Face Mist", "skin_type": ["чувствительная", "нормальная"], "problems": ["раздражение", "покраснение"], "price": "700₽", "description": "Успокаивает и освежает кожу."},
+    {"name": "Brightening Cream", "skin_type": ["нормальная", "сухая"], "problems": ["тусклость"], "price": "1300₽", "description": "Осветляет тон кожи и придает сияние."},
+    {"name": "Oil-Free Moisturizer", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность"], "price": "950₽", "description": "Легкий увлажнитель без жирного блеска."},
+    {"name": "Anti-Wrinkle Serum", "skin_type": ["сухая", "нормальная"], "problems": ["морщины"], "price": "2100₽", "description": "Сглаживает морщины и повышает упругость кожи."},
+    {"name": "Hydrating Lip Balm", "skin_type": ["все"], "problems": ["сухость"], "price": "300₽", "description": "Увлажняет и смягчает губы."},
+    {"name": "Clarifying Mask", "skin_type": ["жирная", "комбинированная"], "problems": ["акне", "блеск"], "price": "1200₽", "description": "Глубоко очищает поры и борется с высыпаниями."},
+    {"name": "Gentle Face Wash", "skin_type": ["чувствительная", "нормальная"], "problems": ["раздражение"], "price": "850₽", "description": "Мягко очищает кожу, не раздражает."},
+    {"name": "Vitamin B5 Serum", "skin_type": ["сухая", "нормальная"], "problems": ["сухость", "шелушение"], "price": "1500₽", "description": "Увлажняет и восстанавливает кожу."},
+    {"name": "Balancing Toner", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность", "блеск"], "price": "800₽", "description": "Сужает поры и контролирует блеск."},
+    {"name": "Soothing Gel Cream", "skin_type": ["чувствительная", "нормальная"], "problems": ["раздражение"], "price": "1350₽", "description": "Успокаивает и увлажняет кожу без жирного блеска."},
+    {"name": "Hydrating Serum", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1800₽", "description": "Глубокое увлажнение и восстановление кожи."},
+    {"name": "Tea Tree Oil Gel", "skin_type": ["жирная"], "problems": ["акне"], "price": "700₽", "description": "Локальное средство для борьбы с прыщами."},
+    {"name": "Repair Cream", "skin_type": ["сухая", "чувствительная"], "problems": ["раздражение", "сухость"], "price": "1600₽", "description": "Восстанавливает и смягчает кожу."},
+    {"name": "Bright Eyes Gel", "skin_type": ["нормальная", "чувствительная"], "problems": ["темные круги", "отёки"], "price": "1500₽", "description": "Освежает и увлажняет область вокруг глаз."},
+    {"name": "Matte Moisturizer", "skin_type": ["жирная", "комбинированная"], "problems": ["блеск"], "price": "950₽", "description": "Легкий увлажнитель, контролирует жирный блеск."},
+    {"name": "Hydrating Mask", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1200₽", "description": "Интенсивное увлажнение и питание кожи."},
+    {"name": "Anti-Redness Serum", "skin_type": ["чувствительная"], "problems": ["покраснение", "раздражение"], "price": "1550₽", "description": "Снимает покраснения и успокаивает кожу."},
+    {"name": "Acne Clearing Cream", "skin_type": ["жирная", "комбинированная"], "problems": ["акне"], "price": "900₽", "description": "Борется с высыпаниями и предотвращает новые."},
+    {"name": "Ultra Hydrating Lotion", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1250₽", "description": "Легкая текстура, быстро впитывается, увлажняет кожу."},
+    {"name": "Collagen Eye Cream", "skin_type": ["сухая", "нормальная"], "problems": ["морщины", "отёки"], "price": "1600₽", "description": "Снимает отёки и разглаживает морщинки вокруг глаз."},
+    {"name": "Soothing Cleansing Oil", "skin_type": ["чувствительная"], "problems": ["раздражение", "сухость"], "price": "1400₽", "description": "Мягкое очищение без раздражения."},
+    {"name": "Brightening Lotion", "skin_type": ["нормальная", "сухая"], "problems": ["тусклость"], "price": "1200₽", "description": "Осветляет кожу и придает сияние."},
+    {"name": "Oil Control Cream", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность"], "price": "1000₽", "description": "Уменьшает блеск и контролирует выделение себума."},
+    {"name": "Hydra Serum", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1700₽", "description": "Глубокое увлажнение и питание кожи."},
+    {"name": "Tea Tree Spot Cream", "skin_type": ["жирная"], "problems": ["акне"], "price": "750₽", "description": "Локальное средство для проблемных участков кожи."},
+    {"name": "Repair Gel", "skin_type": ["сухая", "чувствительная"], "problems": ["раздражение"], "price": "1500₽", "description": "Успокаивает и восстанавливает поврежденную кожу."},
+    {"name": "Brightening Eye Serum", "skin_type": ["нормальная", "чувствительная"], "problems": ["темные круги"], "price": "1550₽", "description": "Осветляет темные круги и снимает усталость глаз."},
+    {"name": "Matte Face Gel", "skin_type": ["жирная", "комбинированная"], "problems": ["блеск"], "price": "1000₽", "description": "Контролирует жирный блеск и увлажняет кожу."},
+    {"name": "Hydrating Cream Mask", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1250₽", "description": "Интенсивное увлажнение и питание кожи."},
+    {"name": "Anti-Redness Balm", "skin_type": ["чувствительная"], "problems": ["покраснение"], "price": "1400₽", "description": "Успокаивает и восстанавливает кожу."},
+    {"name": "Acne Control Serum", "skin_type": ["жирная", "комбинированная"], "problems": ["акне"], "price": "950₽", "description": "Борется с воспалениями и высыпаниями."},
+    {"name": "Ultra Moisturizing Gel", "skin_type": ["сухая"], "problems": ["сухость"], "price": "1350₽", "description": "Легкая текстура с сильным увлажнением."},
+    {"name": "Collagen Eye Gel", "skin_type": ["сухая", "нормальная"], "problems": ["морщины", "отёки"], "price": "1600₽", "description": "Снимает отёки и разглаживает морщинки вокруг глаз."},
+    {"name": "Soothing Face Lotion", "skin_type": ["чувствительная"], "problems": ["раздражение"], "price": "1400₽", "description": "Успокаивает и восстанавливает кожу после стрессов."},
+    {"name": "Brightening Serum", "skin_type": ["нормальная", "сухая"], "problems": ["тусклость"], "price": "1700₽", "description": "Придает сияние и освежает цвет лица."},
+    {"name": "Oil Control Lotion", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность"], "price": "1000₽", "description": "Матирует кожу и контролирует выделение себума."},
+    {"name": "Hydra Light Cream", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1250₽", "description": "Легкая текстура, интенсивное увлажнение."},
+    {"name": "Tea Tree Clearing Gel", "skin_type": ["жирная"], "problems": ["акне"], "price": "800₽", "description": "Локальная борьба с воспалениями и прыщами."},
+    {"name": "Repairing Night Cream", "skin_type": ["сухая", "чувствительная"], "problems": ["сухость", "раздражение"], "price": "1800₽", "description": "Восстанавливает и питает кожу ночью."},
+    {"name": "Bright Eyes Cream", "skin_type": ["нормальная", "чувствительная"], "problems": ["темные круги", "отёки"], "price": "1600₽", "description": "Осветляет и увлажняет область вокруг глаз."},
+    {"name": "Matte Moisturizing Gel", "skin_type": ["жирная", "комбинированная"], "problems": ["блеск"], "price": "1050₽", "description": "Легкое увлажнение с контролем блеска."},
+    {"name": "Hydrating Mask Cream", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1300₽", "description": "Интенсивное увлажнение и питание кожи."},
+    {"name": "Anti-Redness Cream Gel", "skin_type": ["чувствительная"], "problems": ["покраснение"], "price": "1450₽", "description": "Успокаивает раздражения и снижает покраснение."},
+    {"name": "Acne Spot Gel", "skin_type": ["жирная", "комбинированная"], "problems": ["акне"], "price": "900₽", "description": "Локальное средство для борьбы с прыщами."},
+    {"name": "Ultra Moisturizing Cream Gel", "skin_type": ["сухая"], "problems": ["сухость"], "price": "1400₽", "description": "Глубокое увлажнение и питание кожи."},
+    {"name": "Collagen Eye Balm", "skin_type": ["сухая", "нормальная"], "problems": ["морщины", "отёки"], "price": "1650₽", "description": "Разглаживает морщинки и уменьшает отёки вокруг глаз."},
+    {"name": "Soothing Cleansing Gel", "skin_type": ["чувствительная"], "problems": ["раздражение"], "price": "1350₽", "description": "Мягкое очищение без пересушивания кожи."},
+    {"name": "Brightening Lotion Gel", "skin_type": ["нормальная", "сухая"], "problems": ["тусклость"], "price": "1300₽", "description": "Осветляет тон кожи и придает сияние."},
+    {"name": "Oil Control Gel Cream", "skin_type": ["жирная", "комбинированная"], "problems": ["жирность"], "price": "1050₽", "description": "Контролирует блеск и выделение себума."},
+    {"name": "Hydra Gel Cream Light", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1300₽", "description": "Легкая текстура, интенсивное увлажнение кожи."},
+    {"name": "Tea Tree Acne Gel", "skin_type": ["жирная"], "problems": ["акне"], "price": "800₽", "description": "Локальное средство для проблемных зон кожи."},
+    {"name": "Repair Night Gel", "skin_type": ["сухая", "чувствительная"], "problems": ["раздражение"], "price": "1850₽", "description": "Восстанавливает и успокаивает кожу ночью."},
+    {"name": "Bright Eye Gel", "skin_type": ["нормальная", "чувствительная"], "problems": ["темные круги", "отёки"], "price": "1650₽", "description": "Осветляет и увлажняет кожу вокруг глаз."},
+    {"name": "Matte Face Gel Cream", "skin_type": ["жирная", "комбинированная"], "problems": ["блеск"], "price": "1100₽", "description": "Легкое увлажнение с контролем блеска."},
+    {"name": "Hydrating Mask Gel", "skin_type": ["сухая", "нормальная"], "problems": ["сухость"], "price": "1350₽", "description": "Интенсивное увлажнение и питание кожи."},
 ]
 
+    # ... сюда добавляем до 100+ товаров
+]
 
+# === Вопросы пользователю ===
+questions = [
+    {"question": "Какой у вас тип кожи?", "options": ["сухая", "жирная", "комбинированная", "чувствительная", "нормальная"], "key": "skin_type"},
+    {"question": "Какие проблемы кожи вас беспокоят?", "options": ["сухость", "шелушение", "жирность", "акне", "покраснение", "раздражение"], "key": "problems"}
+]
 
-}
+# === Словарь для хранения ответов пользователей ===
+user_data = {}
 
-# ------------------ СТАРТ ------------------
-@bot.message_handler(commands=["start"])
+# === Стартовое сообщение ===
+@bot.message_handler(commands=['start'])
 def start(message):
-    user_data[message.chat.id] = {}
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("🌸 Сухая", "✨ Жирная", "🌼 Комбинированная")
-    bot.send_message(
-        message.chat.id,
-        "Привет! 🌷\nДавай подберём косметику 💄\n\nВыбери тип кожи:",
-        reply_markup=markup
-    )
+    chat_id = message.chat.id
+    user_data[chat_id] = {}
+    bot.send_message(chat_id, "Привет! Я YourSkincare, помогу подобрать средства для твоей кожи 🌿")
+    ask_question(chat_id, 0)
 
-# ------------------ ВЫБОР ТИПА КОЖИ ------------------
-@bot.message_handler(func=lambda m: m.text in ["🌸 Сухая", "✨ Жирная", "🌼 Комбинированная"])
-def skin_type(message):
-    skin_map = {"🌸 Сухая": "dry", "✨ Жирная": "oily", "🌼 Комбинированная": "combo"}
-    user_data[message.chat.id]["skin"] = skin_map[message.text]
-    ask_budget(message)
-
-# ------------------ ВЫБОР БЮДЖЕТА ------------------
-def ask_budget(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("💰 Бюджет", "🪙 Средний", "💎 Премиум")
-    bot.send_message(message.chat.id, "Выбери бюджет 💖:", reply_markup=markup)
-    bot.register_next_step_handler(message, budget_selected)
-
-def budget_selected(message):
-    text = message.text
-    if "💰" in text:
-        user_data[message.chat.id]["budget"] = "💰"
-    elif "🪙" in text:
-        user_data[message.chat.id]["budget"] = "🪙"
-    elif "💎" in text:
-        user_data[message.chat.id]["budget"] = "💎"
+# === Функция задает вопросы по порядку ===
+def ask_question(chat_id, q_index):
+    if q_index < len(questions):
+        q = questions[q_index]
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+        for option in q["options"]:
+            markup.add(option)
+        bot.send_message(chat_id, q["question"], reply_markup=markup)
+        bot.register_next_step_handler_by_chat_id(chat_id, lambda msg: handle_answer(msg, q_index))
     else:
-        bot.send_message(message.chat.id, "Пожалуйста, выбери кнопку 💖")
-        ask_budget(message)
+        # Все вопросы отвечены, фильтруем продукты
+        send_filtered_products(chat_id)
+
+def handle_answer(message, q_index):
+    chat_id = message.chat.id
+    answer = message.text.lower()
+    key = questions[q_index]["key"]
+    
+    # Для проблем может быть несколько ответов через запятую
+    if key == "problems":
+        answer_list = [a.strip() for a in answer.split(",") if a.strip() in questions[q_index]["options"]]
+        user_data[chat_id][key] = answer_list
+    else:
+        if answer in questions[q_index]["options"]:
+            user_data[chat_id][key] = answer
+        else:
+            user_data[chat_id][key] = answer  # на случай пользователь ввел что-то свое
+
+    ask_question(chat_id, q_index + 1)
+
+# === Фильтруем и отправляем список продуктов ===
+def send_filtered_products(chat_id):
+    user_skin = user_data[chat_id].get("skin_type", "")
+    user_problems = user_data[chat_id].get("problems", [])
+    
+    filtered = []
+    for p in products:
+        if user_skin in p["skin_type"] and any(prob in p["problems"] for prob in user_problems):
+            filtered.append(p)
+    
+    if not filtered:
+        bot.send_message(chat_id, "По вашим ответам не найдено подходящих средств 😔")
         return
-    ask_question_1(message)
+    
+    msg_text = "Подходящие средства для вас:\n\n"
+    for p in filtered:
+        msg_text += f"• {p['name']} — {p['price']}\n  {p['description']}\n\n"
+    
+    bot.send_message(chat_id, msg_text, reply_markup=types.ReplyKeyboardRemove())
 
-# ------------------ ВОПРОСЫ ------------------
-def yes_no_keyboard():
-    kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    kb.add("✅ Да", "❌ Нет")
-    return kb
-
-def ask_question_1(message):
-    bot.send_message(message.chat.id, "Есть ли у тебя прыщики? 🌱", reply_markup=yes_no_keyboard())
-    bot.register_next_step_handler(message, q1)
-
-def q1(message):
-    user_data[message.chat.id]["acne"] = message.text=="✅ Да"
-    bot.send_message(message.chat.id, "Кожа часто блестит? ✨", reply_markup=yes_no_keyboard())
-    bot.register_next_step_handler(message, q2)
-
-def q2(message):
-    user_data[message.chat.id]["shine"] = message.text=="✅ Да"
-    bot.send_message(message.chat.id, "Есть чувство стянутости? 🌸", reply_markup=yes_no_keyboard())
-    bot.register_next_step_handler(message, q3)
-
-def q3(message):
-    user_data[message.chat.id]["tight"] = message.text=="✅ Да"
-    bot.send_message(message.chat.id, "Кожа чувствительная? 🌼", reply_markup=yes_no_keyboard())
-    bot.register_next_step_handler(message, q4)
-
-def q4(message):
-    user_data[message.chat.id]["sensitive"] = message.text=="✅ Да"
-    result(message)
-
-# ------------------ РЕЗУЛЬТАТ ------------------
-def result(message):
-    skin = user_data[message.chat.id]["skin"]
-    budget = user_data[message.chat.id]["budget"]
-    answers = user_data[message.chat.id]
-
-    # фильтруем по бюджету и меткам
-    products = [
-        p for p in COSMETICS[skin]
-        if p[3]==budget
-        and p[4]["acne"]==answers["acne"]
-        and p[4]["shine"]==answers["shine"]
-        and p[4]["tight"]==answers["tight"]
-        and p[4]["sensitive"]==answers["sensitive"]
-    ]
-
-    # если меньше 10, добираем случайные того же бюджета
-    if len(products)<10:
-        others = [p for p in COSMETICS[skin] if p[3]==budget and p not in products]
-        random.shuffle(others)
-        products += others[:10-len(products)]
-
-    random.shuffle(products)
-    text = "✨ *Тебе подойдёт эта косметика:* ✨\n\n"
-    for name, brand, desc, _budget, _tags in products[:10]:
-        text += f"🌸 *{name}*\n💎 Бренд: {brand}\nОписание: {desc}\n\n"
-
-    bot.send_message(message.chat.id, text, parse_mode="Markdown", reply_markup=types.ReplyKeyboardRemove())
-
-# ------------------ ЗАПУСК ------------------
+# === Запуск бота ===
 bot.infinity_polling()
-
