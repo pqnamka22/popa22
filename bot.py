@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import random
 
-TOKEN = "8238153006:AAGtGZnLt4SkSWnCCl0dKZr-x5iUM0Ej1R0"
+TOKEN = "7951815306:AAGORsCd0m14I9sbwEL2_q69AxU6g_Wm2Hk"
 bot = telebot.TeleBot(TOKEN)
 
 # временное хранилище пользователей
